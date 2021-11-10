@@ -1,0 +1,29 @@
+{
+  "film_work_pg": {
+    "dsn": {
+      "dbname": "movies",
+      "user": "postgres",
+      "password": "password",
+      "host": "127.0.0.1",
+      "port": 5432,
+      "options": "-c search_path=content"
+    },
+    "state_file_path": "state.json",
+    "fetch_delay": 0.1,
+    "limit": 100,
+    "order_field": [
+      "updated_at"
+    ],
+    "state_field": [
+      "updated_at"
+    ],
+    "sql_query": "SELECT id, updated_at\n\tFROM content.film_work"
+  },
+  "es_settings": {
+    "host": "127.0.0.1",
+    "port": 9200,
+    "schema_movies_path": "schemas/movies.json",
+    "schema_genre_path": "schemas/genre.json",
+    "schema_person_path": "schemas/person.json"
+  }
+}
