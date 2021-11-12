@@ -29,8 +29,10 @@ class DBLoader:
 
     def load_from_film_work(self, query_by_date: str, load_from_work_id: str) -> str:
         self.cursor.execute(query_by_date)
+        list_id_and_date = self.cursor.fetchall()
+        if not list_id_and_date: return query_by_date
 
-        list_by_date = [i[0] for i in self.cursor.fetchall()]
+        list_by_date = [i[0] for i in list_id_and_date]
         query_by_id = load_from_work_id % str(list_by_date)[1:-1]
 
         self.cursor.execute(query_by_id)
