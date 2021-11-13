@@ -32,7 +32,8 @@ class ESSaver():
                                     '_id': row['id']
                                 }
                             }
-                        )
+                        ),
+                        json.dumps(row),
                     ]
                 )
                 if len(self.list) == 50:
