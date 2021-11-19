@@ -1,5 +1,10 @@
 # person queries
 
+load_person = f'''SELECT id, full_name, birth_date
+                    FROM content.person
+                    WHERE updated_at > '%s'
+                    ORDER BY updated_at'''
+
 load_person_by_date = f'''SELECT id, updated_at
                     FROM content.person
                     WHERE updated_at > '%s'
@@ -41,6 +46,11 @@ load_film_work_by_id = f'''{load_film_work} WHERE fw.id IN (%s) GROUP BY fw.id;'
 
 
 # genre queries
+
+load_genre = f'''SELECT id, name, description
+                    FROM content.genre
+                    WHERE updated_at > '%s'
+                    ORDER BY updated_at'''
 
 load_genre_by_date = f'''SELECT id, updated_at
                     FROM content.genre

@@ -10,13 +10,27 @@ def create_index(config, index_name):
     ESSaver(config).create_index(config.es_settings.schema_movies_path, index_name)
 
 
-def load_data(config, state, index_name):
+def load_data_film_work(config, state, index_name):
     try:
         ESSaver(config).load(LoadMovies(config, state).loader_movies(), index_name)
-        ESSaver(config).load(LoadGenre(config, state).loader_genre(), index_name)
+        ESSaver(config).load(LoadGenre(config, state).loader_genre_film_work(), index_name)
+        ESSaver(config).load(LoadPerson(config, state).loader_person_film_work(), index_name)
+    except Exception:
+        logger.error('Ошибка при загрузке фильмов')
+
+
+def load_data_person(config, state, index_name):
+    try:
         ESSaver(config).load(LoadPerson(config, state).loader_person(), index_name)
     except Exception:
-        logger.error('Ошибка при загрузке данных')
+        logger.error('Ошибка при загрузке персоны')
+
+
+def load_data_genre(config, state, index_name):
+    try:
+        ESSaver(config).load(LoadGenre(config, state).loader_genre(), index_name)
+    except Exception:
+        logger.error('Ошибка при загрузке жанров')
 
 
 def save_state(config, state):
@@ -25,18 +39,14 @@ def save_state(config, state):
 
 if __name__ == '__main__':
     state = 'state'
-    index_name = 'movies'
+    index_movies = 'movies'
+    index_person = 'person'
+    index_genre = 'genre'
     config = Config.parse_file('config.json')
 
-    create_index(config, index_name)
-    load_data(config, state, index_name)
+    create_index(config, index_movies)
+    load_data_film_work(config, state, index_movies)
+    load_data_person(config, state, index_person)
+    load_data_genre(config, state, index_genre)
+
     save_state(config, state)
-
-
-
-
-
-
-
-
-

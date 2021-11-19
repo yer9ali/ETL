@@ -1,7 +1,7 @@
 from psycopg2.extras import DictCursor
 from postgres_to_es.connection import connect_postgres
 from postgres_to_es.query import load_genre_by_date, load_genre_from_film_work_id, load_person_by_date, \
-    load_person_from_film_work_id, load_film_work_by_date, load_film_work_by_id
+    load_person_from_film_work_id, load_film_work_by_date, load_film_work_by_id, load_genre, load_person
 from postgres_to_es.state import State, JsonFileStorage
 
 
@@ -17,15 +17,21 @@ class DBLoader:
         """Загрузка фильмов по дате"""
         return load_film_work_by_date % self.state_key
 
-    def load_person(self) -> str:
+    def load_person_film_work(self) -> str:
         """Загрузка персоны по дате и обновление соответствующих фильмов"""
         query_by_date = load_person_by_date % self.state_key
         return self.load_from_film_work(query_by_date, load_person_from_film_work_id)
 
-    def load_genre(self) -> str:
+    def load_person(self) -> str:
+        return load_person % self.state_key
+
+    def load_genre_film_work(self) -> str:
         """Загрузка жанров по дате и обновление соответствующих фильмов"""
         query_by_date = load_genre_by_date % self.state_key
         return self.load_from_film_work(query_by_date, load_genre_from_film_work_id)
+
+    def load_genre(self) -> str:
+        return load_genre % self.state_key
 
     def load_from_film_work(self, query_by_date: str, load_from_work_id: str) -> str:
         self.cursor.execute(query_by_date)
@@ -41,7 +47,7 @@ class DBLoader:
         query_update = load_film_work_by_id % str(list_by_id)[1:-1]
         return query_update
 
-    def load_data(self) -> list:
+    def load_data_film_work(self) -> list:
         while True:
             rows = self.cursor.fetchmany(self.batch_size)
             if not rows:
@@ -63,22 +69,62 @@ class DBLoader:
                 self.data.append(d)
         return self.data
 
+    def load_data_genre(self) -> list:
+        while True:
+            rows = self.cursor.fetchmany(self.batch_size)
+            if not rows:
+                break
+
+            for row in rows:
+                d = {
+                    "id": dict(row).get('id'),
+                    "name": dict(row).get('name'),
+                    "description": dict(row).get('description'),
+                }
+                self.data.append(d)
+        return self.data
+
+    def load_data_person(self) -> list:
+        while True:
+            rows = self.cursor.fetchmany(self.batch_size)
+            if not rows:
+                break
+
+            for row in rows:
+                d = {
+                    "id": dict(row).get('id'),
+                    "full_name": dict(row).get('full_name'),
+                    "birth_date": dict(row).get('birth_date'),
+                }
+                self.data.append(d)
+        return self.data
+
+
 
 class LoadMovies(DBLoader):
     def loader_movies(self) -> list:
         self.cursor.execute(self.load_film_work())
-        return self.load_data()
+        return self.load_data_film_work()
 
 
 class LoadGenre(DBLoader):
+    def loader_genre_film_work(self) -> list:
+        self.cursor.execute(self.load_genre_film_work())
+
+        return self.load_data_film_work()
+
     def loader_genre(self) -> list:
         self.cursor.execute(self.load_genre())
-
-        return self.load_data()
+        return self.load_data_genre()
 
 
 class LoadPerson(DBLoader):
+    def loader_person_film_work(self) -> list:
+        self.cursor.execute(self.load_person_film_work())
+
+        return self.load_data_film_work()
+
     def loader_person(self) -> list:
         self.cursor.execute(self.load_person())
 
-        return self.load_data()
+        return self.load_data_person()
