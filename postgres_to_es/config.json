@@ -22,7 +22,7 @@
   "es_settings": {
     "host": "127.0.0.1",
     "port": 9200,
-    "schema_movies_path": "schemas/movies.json",
+    "schema_movies_path": "schemas/movie.json",
     "schema_genre_path": "schemas/genre.json",
     "schema_person_path": "schemas/person.json"
   }

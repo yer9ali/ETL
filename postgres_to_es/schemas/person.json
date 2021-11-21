@@ -42,7 +42,7 @@
   "mappings": {
     "dynamic": "strict",
     "properties": {
-      "id": {
+      "uuid": {
         "type": "keyword"
       },
       "full_name": {
@@ -52,6 +52,12 @@
       "birth_date": {
         "type": "text",
         "analyzer": "ru_en"
+      },
+      "role": {
+        "type": "keyword"
+      },
+      "film_ids": {
+        "type": "keyword"
       }
     }
   }

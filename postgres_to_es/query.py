@@ -1,9 +1,13 @@
 # person queries
 
-load_person = f'''SELECT id, full_name, birth_date
-                    FROM content.person
+load_person = f'''SELECT p.id, p.full_name, p.birth_date,
+                    ARRAY_AGG(DISTINCT pfw.role) AS role,
+                    ARRAY_AGG(DISTINCT jsonb_build_object('id', pfw.film_work_id)) AS film_ids
+                    FROM content.person as p
+                    LEFT JOIN content.person_film_work as pfw ON p.id = pfw.person_id
                     WHERE updated_at > '%s'
-                    ORDER BY updated_at'''
+                    GROUP BY p.id
+                    '''
 
 load_person_by_date = f'''SELECT id, updated_at
                     FROM content.person
@@ -32,6 +36,7 @@ load_film_work = f'''SELECT DISTINCT fw.id,
                 FILTER (WHERE pfw.role = 'actor')                                  AS actors,
                 ARRAY_AGG(DISTINCT jsonb_build_object('id', p.id, 'name', p.full_name))
                 FILTER (WHERE pfw.role = 'writer')                                 AS writers,
+                ARRAY_AGG(DISTINCT p.full_name) FILTER (WHERE pfw.role = 'director')  AS directors_names,
                 ARRAY_AGG(DISTINCT p.full_name) FILTER (WHERE pfw.role = 'actor')  AS actors_names,
                 ARRAY_AGG(DISTINCT p.full_name) FILTER (WHERE pfw.role = 'writer') AS writers_names
 FROM content.film_work as fw

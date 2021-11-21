@@ -55,12 +55,13 @@ class DBLoader:
 
             for row in rows:
                 d = {
-                    "id": dict(row).get('id'),
+                    "uuid": dict(row).get('id'),
                     "imdb_rating": dict(row).get('rating'),
                     "genre": dict(row).get('genre'),
                     "title": dict(row).get('title'),
                     "description": dict(row).get('description'),
-                    "director": dict(row).get('director'),
+                    "directors": dict(row).get('director'),
+                    "directors_names": dict(row).get('directors_names'),
                     "actors_names": dict(row).get('actors_names'),
                     "writers_names": dict(row).get('writers_names'),
                     "actors": dict(row).get('actors'),
@@ -77,7 +78,7 @@ class DBLoader:
 
             for row in rows:
                 d = {
-                    "id": dict(row).get('id'),
+                    "uuid": dict(row).get('id'),
                     "name": dict(row).get('name'),
                     "description": dict(row).get('description'),
                 }
@@ -92,13 +93,14 @@ class DBLoader:
 
             for row in rows:
                 d = {
-                    "id": dict(row).get('id'),
+                    "uuid": dict(row).get('id'),
                     "full_name": dict(row).get('full_name'),
                     "birth_date": dict(row).get('birth_date'),
+                    "role": dict(row).get('role'),
+                    "film_ids": [i.get('id') for i in dict(row).get('film_ids')],
                 }
                 self.data.append(d)
         return self.data
-
 
 
 class LoadMovies(DBLoader):

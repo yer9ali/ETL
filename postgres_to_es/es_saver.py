@@ -29,7 +29,7 @@ class ESSaver():
                             {
                                 'index': {
                                     '_index': index_name,
-                                    '_id': row['id']
+                                    '_id': row['uuid']
                                 }
                             }
                         ),
@@ -40,4 +40,5 @@ class ESSaver():
                     self.client.bulk(body='\n'.join(self.list) + '\n', index=index_name, refresh=True)
                     self.list.clear()
             self.client.bulk(body='\n'.join(self.list) + '\n', index=index_name, refresh=True)
-            logger.info(f'Загружено {len(rows)} данных')
+            logger.info(f'Загружено в таблицу {index_name} {len(rows)} данных')
+
