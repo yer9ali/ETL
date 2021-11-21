@@ -44,9 +44,9 @@ def save_state(config, state):
 
 if __name__ == '__main__':
     state = 'state'
-    index_movies = 'movie'
-    index_person = 'person'
-    index_genre = 'genre'
+    index_movies = 'movies'
+    index_person = 'persons'
+    index_genre = 'genres'
     config = Config.parse_file('config.json')
 
     while True:
