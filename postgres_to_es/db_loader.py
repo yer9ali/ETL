@@ -47,6 +47,11 @@ class DBLoader:
         query_update = load_film_work_by_id % str(list_by_id)[1:-1]
         return query_update
 
+    def replace_None(self, d: dict):
+        for key, value in d.items():
+            if value is None:
+                d[key] = []
+
     def load_data_film_work(self) -> list:
         while True:
             rows = self.cursor.fetchmany(self.batch_size)
@@ -67,6 +72,7 @@ class DBLoader:
                     "actors": dict(row).get('actors'),
                     "writers": dict(row).get('writers'),
                 }
+                self.replace_None(d)
                 self.data.append(d)
         return self.data
 
@@ -82,6 +88,7 @@ class DBLoader:
                     "name": dict(row).get('name'),
                     "description": dict(row).get('description'),
                 }
+                self.replace_None(d)
                 self.data.append(d)
         return self.data
 
@@ -99,6 +106,7 @@ class DBLoader:
                     "role": dict(row).get('role'),
                     "film_ids": [i.get('id') for i in dict(row).get('film_ids')],
                 }
+                self.replace_None(d)
                 self.data.append(d)
         return self.data
 

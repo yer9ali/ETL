@@ -3,8 +3,8 @@
     "dsn": {
       "dbname": "movies",
       "user": "postgres",
-      "password": "password",
-      "host": "127.0.0.1",
+      "password": "12345678",
+      "host": "0.0.0.0",
       "port": 5432,
       "options": "-c search_path=content"
     },
@@ -20,7 +20,7 @@
     "sql_query": "SELECT id, updated_at\n\tFROM content.film_work"
   },
   "es_settings": {
-    "host": "127.0.0.1",
+    "host": "0.0.0.0",
     "port": 9200,
     "schema_movies_path": "schemas/movie.json",
     "schema_genre_path": "schemas/genre.json",

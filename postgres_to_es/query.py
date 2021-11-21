@@ -29,12 +29,12 @@ load_film_work = f'''SELECT DISTINCT fw.id,
                 fw.rating,
                 fw.type,
                 fw.updated_at,
-                ARRAY_AGG(DISTINCT jsonb_build_object('name', g.name, 'id', g.id)) AS genre,
-                ARRAY_AGG(DISTINCT jsonb_build_object('id', p.id, 'name', p.full_name))
+                ARRAY_AGG(DISTINCT jsonb_build_object('uuid', g.id, 'name', g.name)) AS genre,
+                ARRAY_AGG(DISTINCT jsonb_build_object('uuid', p.id, 'full_name', p.full_name))
                 FILTER (WHERE pfw.role = 'director')                               AS director,
-                ARRAY_AGG(DISTINCT jsonb_build_object('id', p.id, 'name', p.full_name))
+                ARRAY_AGG(DISTINCT jsonb_build_object('uuid', p.id, 'full_name', p.full_name))
                 FILTER (WHERE pfw.role = 'actor')                                  AS actors,
-                ARRAY_AGG(DISTINCT jsonb_build_object('id', p.id, 'name', p.full_name))
+                ARRAY_AGG(DISTINCT jsonb_build_object('uuid', p.id, 'full_name', p.full_name))
                 FILTER (WHERE pfw.role = 'writer')                                 AS writers,
                 ARRAY_AGG(DISTINCT p.full_name) FILTER (WHERE pfw.role = 'director')  AS directors_names,
                 ARRAY_AGG(DISTINCT p.full_name) FILTER (WHERE pfw.role = 'actor')  AS actors_names,
