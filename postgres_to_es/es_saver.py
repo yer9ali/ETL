@@ -1,7 +1,9 @@
 import json
 from typing import List
+
 from elasticsearch import Elasticsearch
 from loguru import logger
+
 from postgres_to_es.utils import backoff
 
 
@@ -18,6 +20,10 @@ class ESSaver():
         if not self.client.indices.exists(index=index_name):
             self.client.index(index=index_name, body=f)
             logger.info(f'Создан индекс {index_name}')
+
+    def get_count_index(self, index_name):
+        res = self.client.search(index=index_name, query={"match_all": {}})
+        return res['hits']['total']['value']
 
     @backoff()
     def load(self, rows: List[str], index_name: str):

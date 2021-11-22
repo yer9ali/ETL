@@ -1,4 +1,5 @@
 import psycopg2
+
 from postgres_to_es.utils import backoff
 
 

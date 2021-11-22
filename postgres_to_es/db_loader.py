@@ -1,4 +1,5 @@
 from psycopg2.extras import DictCursor
+
 from postgres_to_es.connection import connect_postgres
 from postgres_to_es.query import load_genre_by_date, load_genre_from_film_work_id, load_person_by_date, \
     load_person_from_film_work_id, load_film_work_by_date, load_film_work_by_id, load_genre, load_person
