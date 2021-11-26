@@ -4,7 +4,7 @@ from typing import List
 from elasticsearch import Elasticsearch
 from loguru import logger
 
-from postgres_to_es.utils import backoff
+from utils import backoff
 
 
 class ESSaver():
