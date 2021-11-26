@@ -19,7 +19,7 @@ class ESSaver():
             f = json.load(index_file)
         if not self.client.indices.exists(index=index_name):
             self.client.index(index=index_name, body=f)
-            logger.info(f'Создан индекс {index_name}')
+            logger.info(f'Created index {index_name}')
 
     def get_count_index(self, index_name):
         res = self.client.search(index=index_name, query={"match_all": {}})
@@ -46,5 +46,5 @@ class ESSaver():
                     self.client.bulk(body='\n'.join(self.list) + '\n', index=index_name, refresh=True)
                     self.list.clear()
             self.client.bulk(body='\n'.join(self.list) + '\n', index=index_name, refresh=True)
-            logger.info(f'Загружено в таблицу {index_name} {len(rows)} данных')
+            logger.info(f'Uploaded to table {index_name} {len(rows)} data')
 

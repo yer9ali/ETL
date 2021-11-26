@@ -25,21 +25,21 @@ def load_data_film_work(config, state, index_name):
             ESSaver(config).load(LoadGenre(config, state).loader_genre_film_work(), index_name)
             ESSaver(config).load(LoadPerson(config, state).loader_person_film_work(), index_name)
     except Exception:
-        logger.error('Ошибка при загрузке фильмов')
+        logger.error('Error loading movies')
 
 
 def load_data_person(config, state, index_name):
     try:
         ESSaver(config).load(LoadPerson(config, state).loader_person(), index_name)
     except Exception:
-        logger.error('Ошибка при загрузке персоны')
+        logger.error('Error loading person')
 
 
 def load_data_genre(config, state, index_name):
     try:
         ESSaver(config).load(LoadGenre(config, state).loader_genre(), index_name)
     except Exception:
-        logger.error('Ошибка при загрузке жанров')
+        logger.error('Error loading genres')
 
 
 def save_state(config, state):
@@ -48,18 +48,19 @@ def save_state(config, state):
 
 if __name__ == '__main__':
     state = 'state'
-    index_movies = 'movies'
-    index_person = 'persons'
-    index_genre = 'genres'
     config = Config.parse_file('config.json')
+    index_config = {
+        'movies': config.es_settings.schema_movies_path,
+        'persons': config.es_settings.schema_person_path,
+        'genres': config.es_settings.schema_genre_path,
+    }
+
+    for key, value in index_config.items():
+        create_index(config, key, value)
 
     while True:
-        create_index(config, config.es_settings.schema_movies_path, index_movies)
-        load_data_film_work(config, state, index_movies)
-        create_index(config, config.es_settings.schema_person_path, index_person)
-        load_data_person(config, state, index_person)
-        create_index(config, config.es_settings.schema_genre_path, index_genre)
-        load_data_genre(config, state, index_genre)
+        for key in index_config.keys():
+            load_data_film_work(config, state, key)
 
         save_state(config, state)
 
