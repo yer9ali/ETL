@@ -46,5 +46,5 @@ class ESSaver():
                     self.client.bulk(body='\n'.join(self.list) + '\n', index=index_name, refresh=True)
                     self.list.clear()
             self.client.bulk(body='\n'.join(self.list) + '\n', index=index_name, refresh=True)
-            logger.info(f'Uploaded to table {index_name} {len(rows)} data')
+            logger.info(f'Загружено в таблицу {index_name} {len(rows)} данных')
 
