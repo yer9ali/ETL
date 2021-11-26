@@ -19,12 +19,12 @@ def backoff(start_sleep_time=0.1, factor=2, border_sleep_time=10):
                         t *= factor
                     if t >= border_sleep_time:
                         t = border_sleep_time
-                    logger.info(f'Повторное подключение {count}')
+                    logger.info(f'Repeated connection {count}')
                     count += 1
                     continue
                 finally:
                     if count == border_sleep_time:
-                        logger.info(f'Количество повторных подключений {count}. Попробуйте позже')
+                        logger.info(f'Number of repeated connections {count}. Try later')
                         break
         return inner
 
