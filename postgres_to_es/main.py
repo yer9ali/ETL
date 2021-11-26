@@ -3,10 +3,10 @@ from time import sleep
 
 from loguru import logger
 
-from db_loader import LoadMovies, LoadGenre, LoadPerson
-from es_saver import ESSaver
-from models import Config
-from state import JsonFileStorage, State
+from postgres_to_es.db_loader import LoadMovies, LoadGenre, LoadPerson
+from postgres_to_es.es_saver import ESSaver
+from postgres_to_es.models import Config
+from postgres_to_es.state import JsonFileStorage, State
 
 
 def create_index(config, path, index_name):
