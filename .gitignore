@@ -4,6 +4,9 @@
 
 # IntelliJ project files
 .idea
+env
+venv
+postgres_to_es/venv
 *.iml
 out
 gen

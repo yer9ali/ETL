@@ -7,23 +7,13 @@ from loguru import logger
 from utils import backoff
 
 
-class ESSaver():
-
+class ES:
     def __init__(self, config):
         self.client = Elasticsearch([dict(config.es_settings)])
         self.list = []
 
-    @backoff()
-    def create_index(self, file_path, index_name):
-        with open(file_path, 'r') as index_file:
-            f = json.load(index_file)
-        if not self.client.indices.exists(index=index_name):
-            self.client.index(index=index_name, body=f)
-            logger.info(f'Created index {index_name}')
 
-    def get_count_index(self, index_name):
-        res = self.client.search(index=index_name, query={"match_all": {}})
-        return res['hits']['total']['value']
+class ESLoader(ES):
 
     @backoff()
     def load(self, rows: List[str], index_name: str):
@@ -48,3 +38,20 @@ class ESSaver():
             self.client.bulk(body='\n'.join(self.list) + '\n', index=index_name, refresh=True)
             logger.info(f'Uploaded to table {index_name} {len(rows)} data')
 
+
+class ESCreator(ES):
+
+    @backoff()
+    def create_index(self, file_path, index_name):
+        with open(file_path, 'r') as index_file:
+            f = json.load(index_file)
+        if not self.client.indices.exists(index=index_name):
+            self.client.index(index=index_name, body=f)
+            logger.info(f'Created index {index_name}')
+
+
+class ESState(ES):
+
+    def get_count_index(self, index_name):
+        res = self.client.search(index=index_name, query={"match_all": {}})
+        return res['hits']['total']['value']

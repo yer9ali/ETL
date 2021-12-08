@@ -29,3 +29,9 @@ def backoff(start_sleep_time=0.1, factor=2, border_sleep_time=10):
         return inner
 
     return func_wrapper
+
+
+def replace_none(d: dict):
+    for key, value in d.items():
+        if value is None:
+            d[key] = []

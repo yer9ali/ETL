@@ -3,8 +3,8 @@ from time import sleep
 
 from loguru import logger
 
-from db_loader import LoadMovies, LoadGenre, LoadPerson
-from es_saver import ESSaver
+from db_loader import LoadMovies, LoadGenre, LoadPerson, UpdateSomeMovieData
+from es import ESLoader, ESCreator, ESState
 from models import Config
 from state import JsonFileStorage, State
 
@@ -16,9 +16,9 @@ config = Config.parse_file('config.json')
 
 
 def create_index():
-    ESSaver(config).create_index(config.es_settings.schema_movies_path, index_movies)
-    ESSaver(config).create_index(config.es_settings.schema_person_path, index_person)
-    ESSaver(config).create_index(config.es_settings.schema_genre_path, index_genre)
+    ESCreator(config).create_index(config.es_settings.schema_movies_path, index_movies)
+    ESCreator(config).create_index(config.es_settings.schema_person_path, index_person)
+    ESCreator(config).create_index(config.es_settings.schema_genre_path, index_genre)
 
 
 def load_data_film_work():
@@ -27,25 +27,25 @@ def load_data_film_work():
     Если index count не больше 1, это означает что внутри индекса отсутствуют данные
     и не вкючается обновления персоны и жанров"""
     try:
-        index_count = ESSaver(config).get_count_index(index_movies)
-        ESSaver(config).load(LoadMovies(config, state).loader_movies(), index_movies)
+        index_count = ESState(config).get_count_index(index_movies)
+        ESLoader(config).load(LoadMovies(config, state).load_movies(), index_movies)
         if index_count > 1:
-            ESSaver(config).load(LoadGenre(config, state).loader_genre_film_work(), index_movies)
-            ESSaver(config).load(LoadPerson(config, state).loader_person_film_work(), index_movies)
+            ESLoader(config).load(UpdateSomeMovieData(config, state).update_genres_on_film_work(), index_movies)
+            ESLoader(config).load(UpdateSomeMovieData(config, state).update_person_on_film_work(), index_movies)
     except Exception:
         logger.error('Error loading movies')
 
 
 def load_data_person():
     try:
-        ESSaver(config).load(LoadPerson(config, state).loader_person(), index_person)
+        ESLoader(config).load(LoadPerson(config, state).loader_person(), index_person)
     except Exception:
         logger.error('Error loading person')
 
 
 def load_data_genre():
     try:
-        ESSaver(config).load(LoadGenre(config, state).loader_genre(), index_genre)
+        ESLoader(config).load(LoadGenre(config, state).loader_genre(), index_genre)
     except Exception:
         logger.error('Error loading genres')
 
