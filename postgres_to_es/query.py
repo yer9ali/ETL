@@ -28,6 +28,7 @@ load_film_work = f'''SELECT DISTINCT fw.id,
                 fw.description,
                 fw.rating,
                 fw.type,
+                fw.subscribers_only,
                 fw.updated_at,
                 ARRAY_AGG(DISTINCT jsonb_build_object('uuid', g.id, 'name', g.name)) AS genre,
                 ARRAY_AGG(DISTINCT jsonb_build_object('uuid', p.id, 'full_name', p.full_name))

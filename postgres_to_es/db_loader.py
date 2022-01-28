@@ -46,6 +46,7 @@ class MoviesLoader(DBLoader):
                     "writers_names": dict(row).get('writers_names'),
                     "actors": dict(row).get('actors'),
                     "writers": dict(row).get('writers'),
+                    "subscribers_only": dict(row).get('subscribers_only')
                 }
                 replace_none(d)
                 self.data.append(d)
